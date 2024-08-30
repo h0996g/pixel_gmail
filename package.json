@@ -3,6 +3,8 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "@vercel/blob": "^0.23.4",
+    "env": "^0.0.2",
     "express": "^4.19.2",
     "jimp": "^0.22.12"
   }
