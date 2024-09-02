@@ -6,17 +6,16 @@ const path = require('path');
 app.set('trust proxy', true);
 const PORT = process.env.PORT || 3000;
 
-
 app.use(async (req, res, next) => {
     const now = new Date();
-    const imageName = path.basename(req.path);
+    const imageName = path.parse(req.path).name;
+
     const ip = req.ip;
     const log = `${now.toISOString()} - ${imageName} - IP: ${ip}`;
-
     try {
-        await put(`logs/${imageName}.txt`, log, {
+        await put(`gmail/${imageName}.txt`, log, {
             access: 'public',
-            contentType: 'text/plain'
+            addRandomSuffix: false,
         });
     } catch (error) {
         console.error("Error writing log to Vercel Blob:", error);
@@ -26,7 +25,7 @@ app.use(async (req, res, next) => {
 
 
 app.get('/', (req, res) => {
-    res.send('Hello visitor');
+    res.send('Hello');
 });
 
 app.get('/image/:filename.png', (req, res) => {
@@ -43,7 +42,7 @@ app.get('/image/:filename.png', (req, res) => {
                 console.error("Error getting image buffer:", err);
                 return res.status(500).send("Error processing image");
             }
-            res.set('Content-Type', Jimp.MIME_PNG);
+            res.set('Content-Type', 'image/png');
             res.send(buffer);
         });
     });
