@@ -16,6 +16,7 @@ app.use(async (req, res, next) => {
         await put(`gmail/${imageName}.txt`, log, {
             access: 'public',
             addRandomSuffix: false,
+            contentType: 'text/plain'
         });
     } catch (error) {
         console.error("Error writing log to Vercel Blob:", error);
@@ -42,7 +43,7 @@ app.get('/image/:filename.png', (req, res) => {
                 console.error("Error getting image buffer:", err);
                 return res.status(500).send("Error processing image");
             }
-            res.set('Content-Type', 'image/png');
+            res.set('Content-Type', Jimp.MIME_PNG);
             res.send(buffer);
         });
     });
